@@ -1,0 +1,55 @@
+<template>
+    <div class="catalog-item">
+        <img class="catalog-item__image" :src=" require('../assets/images/' + productData.image) " alt="img">
+        <p class="catalog-item__name">{{ productData.name }}</p>
+        <p class="catalog-item__price">Price: {{ productData.price }} Р.</p>
+        <button 
+          class="catalog-item__add_to_cart_btn btn" 
+          @click="sendDataToParent"
+        >Add to cart
+      </button>
+    </div>    
+</template>
+
+<script>
+  export default {
+    name: 'catalog-item',
+    components: {},
+    emits:['sendArticle'],
+    props: {
+      productData: {
+        type: Object,
+        default() {
+          return {}
+        }
+      }
+    },
+    data() {
+        return {
+            
+        }
+    },
+    computed: {},
+    methods: {
+      sendDataToParent() {
+        this.$emit('sendArticle', this.productData.article);
+      }
+    },
+    watch: {},
+    mounted() {
+        
+    }
+  }
+</script>
+
+<style lang="scss">
+    .catalog-item {
+      flex-basis: 25%;
+      box-shadow: 0 0 8px 0 #e0e0e0;
+      padding: $padding*2;
+      margin-bottom: $margin*2;
+      &__image {
+      width: 100px;
+      }
+    }
+</style>
