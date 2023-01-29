@@ -5,7 +5,7 @@
         <p class="catalog-item__price">Price: {{ productData.price }} Р.</p>
         <button 
           class="catalog-item__add_to_cart_btn btn" 
-          @click="sendDataToParent"
+          @click="add"
         >Add to cart
       </button>
     </div>    
@@ -15,7 +15,7 @@
   export default {
     name: 'catalog-item',
     components: {},
-    emits:['sendArticle'],
+    emits:['sendArticle', 'addToCart'],
     props: {
       productData: {
         type: Object,
@@ -31,8 +31,8 @@
     },
     computed: {},
     methods: {
-      sendDataToParent() {
-        this.$emit('sendArticle', this.productData.article);
+      add() {
+        this.$emit('addToCart',this.productData)
       }
     },
     watch: {},
