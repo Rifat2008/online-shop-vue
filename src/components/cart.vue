@@ -5,9 +5,10 @@
 </template>
 
 <script>
+  import cartItem from './cart-item.vue';
   export default {
     name: 'cart',
-    components: {},
+    components: {cartItem},
     props: {},
     data() {
         return {
