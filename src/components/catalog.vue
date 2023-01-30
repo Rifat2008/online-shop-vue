@@ -1,5 +1,10 @@
 <template>
     <div class="catalog">
+        <router-link :to="{name: 'cart', params: {cartData: CART}}" >
+          <div class="catalog__link_to_cart">
+            Cart: {{CART.length}}
+          </div>
+        </router-link>
         <h1>Catalog</h1>
         <div class="catalog__list">
           <catalog-item 
@@ -13,12 +18,12 @@
 </template>
 
 <script>
-  import catalogItem from './catalog-item.vue';
+  import CatalogItem from './CatalogItem.vue';
   import { mapActions, mapGetters } from 'vuex';
 
   export default {
     name: 'catalog',
-    components: {catalogItem},
+    components: {CatalogItem},
     props: {},
     data() {
         return {
@@ -26,7 +31,7 @@
         }
     },
     computed: {
-      ...mapGetters(['PRODUCTS'])
+      ...mapGetters(['PRODUCTS', 'CART'])
     },
     methods: {
       ...mapActions([
@@ -57,6 +62,14 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
+      }
+      &__link_to_cart {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: $padding*2;
+        border: solid 1px #aeaeaa;
+        border-radius: $radius;
       }
     }
 </style>

@@ -24,20 +24,13 @@
         }
       }
     },
-    data() {
-        return {
-            
-        }
-    },
-    computed: {},
     methods: {
       add() {
         this.$emit('addToCart',this.productData)
       }
     },
-    watch: {},
     mounted() {
-        
+      this.productData.quantity = 1;
     }
   }
 </script>

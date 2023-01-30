@@ -8,7 +8,11 @@
         </div>
         <div class="cart-item__quantity">
             <p>Qty</p>
-            {{ cartItemData.quantity }}
+            <div>
+                <span class="quantity__btn" @click="decrementItem">-</span>
+                {{ cartItemData.quantity }}
+                <span class="quantity__btn" @click="incrementItem">+</span>
+            </div>
         </div>
         <button class="btn" @click="deleteFromCart">DELETE</button>
     </div>    
@@ -28,12 +32,16 @@
     methods: {
         deleteFromCart() {
             this.$emit('deleteFromCart');
+        },
+        incrementItem() {
+            this.$emit('increment');
+        },
+        decrementItem() {
+            this.$emit('decrement');
         }
-    },
-    mounted() {
-        this.cartItemData.quantity = 1;
     }
-  }
+}
+  
 </script>
 
 <style lang="scss">
@@ -47,6 +55,9 @@
         margin-bottom: $margin*2;
         &__image {
             max-width: 50px;
+        }
+        .quantity__btn {
+            cursor: pointer;
         }
     }
 </style>

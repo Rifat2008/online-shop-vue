@@ -1,50 +1,102 @@
 <template>
     <div class="cart">
-      <h2>Cart</h2>
-        <cart-item 
-          v-for="(item, idx) in cartData"
-          :key="item.article"
-          :cartItemData="item"
-          @deleteFromCart="deleteFromCart(idx)"
-        />
+      <router-link :to="{name: 'catalog'}" >
+          <div class="catalog__link_to_cart">
+            BACK TO CATALOG
+          </div>
+      </router-link>
+      <h1>Cart</h1>
+      <p v-if="!CART.length">There are no products in cart...</p>
+      <cart-item 
+        v-for="(item, idx) in CART"
+        :key="item.article"
+        :cartItemData="item"
+        @deleteFromCart="deleteFromCart(idx)"
+        @increment="increment(idx)"
+        @decrement="decrement(idx)"
+      ></cart-item>
+      <div class="cart__total">
+        <p class="total__name">Total:</p>
+        <p>{{cartTotalCost}} Р.</p>
+      </div>
     </div>    
 </template>
 
 <script>
-  import cartItem from './cart-item.vue';
-  import { mapActions } from 'vuex';
+  import CartItem from './CartItem.vue';
+  import { mapActions, mapGetters } from 'vuex';
 
   export default {
     name: 'cart',
-    components: {cartItem},
-    props: {
-      cartData: {
-        type: Array,
-        default: []
+    components: {CartItem},
+    // data() {
+    //   return {
+    //     cartData: CART;
+    //   }
+    // },
+    computed: {
+      ...mapGetters(['CART']),
+      cartTotalCost() {
+        if (this.CART.length) {
+          let result = [];
+
+          for (let item of this.CART) {
+            result.push(item.price * item.quantity);
+          }
+
+          result = result.reduce(function(sum, el) {
+            return sum + el;
+          });
+          return result;
+          } else {
+            return 0;
+          }
       }
     },
-    data() {
-        return {
-            
-        }
-    },
-    computed: {
-    },
+    // props: {
+    //   cartData: {
+    //     type: Array,
+    //     default: []
+    //   }
+    // },
     methods: {
       ...mapActions([
-        'DELETE_FROM_CART'
+        'DELETE_FROM_CART',
+        'INCREMENT_CART_ITEM', 
+        'DECREMENT_CART_ITEM'
       ]),
       deleteFromCart(idx) {
         this.DELETE_FROM_CART(idx);
+      },
+      increment(index) {
+        this.INCREMENT_CART_ITEM(index);
+      },
+      decrement(index) {
+        this.DECREMENT_CART_ITEM(index);
       }
-    },
-    watch: {},
-    mounted() {
-        
     }
   }
 </script>
 
-<style>
-    
+<style lang="scss">
+  .cart {
+    margin-bottom: 100px;
+    &__total {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      padding: $padding*3;
+      display: flex;
+      justify-content: center;
+      background-color: #25b431;
+      color: #fff;
+      font-size: 20px;
+    }
+    .total__name {
+      margin-right: $margin*2;
+      
+    }
+  }
 </style>
+
