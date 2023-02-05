@@ -1,6 +1,6 @@
 <template>
     <div class="catalog-item">
-        <img class="catalog-item__image" :src=" require('../assets/images/' + productData.image) " alt="img">
+        <img class="catalog-item__image" :src=" require('../../assets/images/' + productData.image) " alt="img">
         <p class="catalog-item__name">{{ productData.name }}</p>
         <p class="catalog-item__price">Price: {{ productData.price }} Р.</p>
         <button 

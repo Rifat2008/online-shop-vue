@@ -6,9 +6,14 @@
           </div>
         </router-link>
         <h1>Catalog</h1>
+        <v-select
+          :options="categories"
+          :selected="selected"
+          @select="sortByCategories"
+        />
         <div class="catalog__list">
           <catalog-item 
-            v-for="product in PRODUCTS"
+            v-for="product in filteredProducts"
             :key="product.article"
             :productData="product"
             @addToCart="addToCart"
@@ -19,19 +24,33 @@
 
 <script>
   import CatalogItem from './CatalogItem.vue';
+  import vSelect from '../v-select.vue';
   import { mapActions, mapGetters } from 'vuex';
 
   export default {
     name: 'catalog',
-    components: {CatalogItem},
+    components: {CatalogItem, vSelect},
     props: {},
     data() {
         return {
-            
+            categories: [
+              {name: 'Все', value: 'ALL'},
+              {name: 'Мужские', value: 'м'},
+              {name: 'Женские', value: 'ж'},
+            ],
+            selected: 'Все',
+            sortedProducts: []
         }
     },
     computed: {
-      ...mapGetters(['PRODUCTS', 'CART'])
+      ...mapGetters(['PRODUCTS', 'CART']),
+      filteredProducts() {
+        if(this.sortedProducts.length) {
+          return this.sortedProducts;
+        } else {
+          return this.PRODUCTS;
+        }
+      }
     },
     methods: {
       ...mapActions([
@@ -40,9 +59,18 @@
       ]),
       addToCart(data) {
         this.ADD_TO_CART(data);
+      },
+      sortByCategories(category) {
+        this.sortedProducts = [];
+        let vm = this;
+        vm.PRODUCTS.map((item) => {
+          if (item.category === category.name) {
+            this.sortedProducts.push(item);
+          }
+        });
+        this.selected = category.name;
       }
     },
-    watch: {},
     mounted() {
         this.GET_PRODUCTS_FROM_API()
         .then((response) => {
@@ -50,7 +78,6 @@
             console.log('Data received!');
           }
         })
-        
     }
   }
 </script>
