@@ -54,7 +54,6 @@
   export default {
     name: 'catalog',
     components: {CatalogItem, vSelect},
-    props: {},
     data() {
         return {
             categories: [
@@ -69,7 +68,11 @@
         }
     },
     computed: {
-      ...mapGetters(['PRODUCTS', 'CART']),
+      ...mapGetters([
+        'PRODUCTS', 
+        'CART',
+        'SEARCH_VALUE'
+    ]),
       filteredProducts() {
         if(this.sortedProducts.length) {
           return this.sortedProducts;
@@ -81,7 +84,8 @@
     methods: {
       ...mapActions([
         'GET_PRODUCTS_FROM_API',
-        'ADD_TO_CART'
+        'ADD_TO_CART',
+        'GET_SEARCH_VALUE_TO_VUEX'
       ]),
       addToCart(data) {
         this.ADD_TO_CART(data);
@@ -95,25 +99,32 @@
         this.sortByCategories();
       },
       sortByCategories(category) {
-        // this.sortedProducts = [];
-        // let vm = this;
-        // vm.PRODUCTS.map((item) => {
-        //   if (item.category === category.name) {
-        //     this.sortedProducts.push(item);
-        //   }
-        // });
-        // this.selected = category.name;
         let vm = this;
         this.sortedProducts = [...this.PRODUCTS];
         this.sortedProducts = this.sortedProducts.filter(function(item) {
           return item.price >= vm.minPrice && item.price <= vm.maxPrice;
-        })
+        });
         if (category) {
           this.sortedProducts = this.sortedProducts.filter(function(el) {
             vm.selected = category.name;
             return el.category === category.name;
-        })
+        });
         }
+      },
+      sortBySearchValue(value) {
+        this.sortedProducts = [...this.PRODUCTS];
+        if (value) {
+          this.sortedProducts = this.sortedProducts.filter(function(item) {
+          return item.name.toLowerCase().includes(value.toLowerCase());
+        });
+        } else {
+          this.sortedProducts = this.PRODUCTS;
+        }
+      }
+    },
+    watch: {
+      SEARCH_VALUE() {
+        this.sortBySearchValue(this.SEARCH_VALUE);
       }
     },
     mounted() {
@@ -122,6 +133,7 @@
           if (response.data) {
             console.log('Data received!');
             this.setRangeSlider();
+            this.sortBySearchValue(this.SEARCH_VALUE);
           }
         })
     }
@@ -138,7 +150,7 @@
       }
       &__link_to_cart {
         position: absolute;
-        top: 10px;
+        top: 100px;
         right: 10px;
         padding: $padding*2;
         border: solid 1px #aeaeaa;

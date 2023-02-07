@@ -8,6 +8,7 @@ const actions = {...commonActions, ...apiRequests};
 
 export default createStore({
   state: {
+    searchValue: '',
     products: [],
     cart: []
   },
